@@ -1,30 +1,53 @@
 var express = require('express');
 var app=express();
+var mongojs = require('mongojs');
+var db = mongojs('contactlist',['contactlist']);
+var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.json());
 
 app.get('/contactlist',function (req,res){
     console.log("I recieved a GET request")
-        person1 = {
-        name:'Ashwani',
-        email:'ashwani2797@gmail.com',
-        number: '9988552289'
-    };
-    person2 = {
-        name:'Ayushi',
-        email:'ayushi707@gmail.com',
-        number: '9988552089'
-    };
-    person3 = {
-        name:'Sonal',
-        email:'sonal@gmail.com',
-        number: '9438793423'
-    };
-var contactlist = [person1,person2,person3];
-// res.setHeader('Content-Type', 'application/json');
-  //  res.send(JSON.stringify(contactlist));
-res.json(contactlist);  
+
+    db.contactlist.find(function (err,docs){
+        console.log(docs);
+        res.json(docs);        
+    });  
+    });
+    app.post('/contactlist',function (req,res){
+        console.log( req.body);
+        db.contactlist.insert(req.body, function (err,docs){
+            res.json(docs);
+        });
 });
+
+    app.delete('/contactlist/:id',function (req,res){
+        var id = req.params.id;
+        console.log(id);
+        db.contactlist.remove({_id: mongojs.ObjectId(id)}, function (err,docs){
+            res.json(docs);
+        })
+    });
+
+    app.get('/contactlist/:id',function(req,res){
+        var id = req.params.id;
+        console.log(id);
+        db.contactlist.findOne({_id: mongojs.ObjectId(id)}, function (err,docs){
+            res.json(docs);
+        })
+    });
+
+    app.put('/contactlist/:id' , function(req,res){
+        var id = req.params.id;
+        console.log(id);
+        console.log(req.body.name);
+        db.contactlist.findAndModify({query: {_id: mongojs.ObjectId(id)},
+            update: {$set: {name : req.body.name ,email: req.body.email , number: req.body.number}},
+            new:true },function (err,docs){
+                res.json(docs);
+            });
+    });
 
 app.listen(8085);
 console.log("running on port 8085");
