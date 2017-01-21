@@ -21,9 +21,9 @@ app.get('/contactlist',function (req,res){
         number: '9438793423'
     };
 var contactlist = [person1,person2,person3];
-// res.setHeader('Content-Type', 'application/json');
-  //  res.send(JSON.stringify(contactlist));
-res.json(contactlist);  
+ res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(contactlist));
+//res.json(contactlist);  
 });
 
 app.listen(8085);

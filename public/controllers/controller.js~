@@ -7,11 +7,11 @@ app.controller("AppCtrl",function ($scope,$http){
         number: '9988552289'
     };
 var contactlist1 = [person1];
- //$scope.contactlist = contactlist1;
+ $scope.contactlist = contactlist1;
     $http.get("/contactlist").then(function(response){
     console.log("I got the data i requested");
     console.log(response.data[0].email);
-    $scope.contactlist = response.data;
+    //$scope.contactlist = response;
        //$scope.content = "Something went wrong";
  }, function(response) {
       $scope.content = "Something went wrong";
